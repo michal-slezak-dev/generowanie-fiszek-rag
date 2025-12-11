@@ -6,8 +6,7 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 
 ## Opis Projektu
 
-**WikiQuiz AI** to projekt zaliczeniowy z przedmiotu PJF stworzony w Pythonie, która automatyzuje proces nauki poprzez generowanie spersonalizowanych quizów i fiszek bezpośrednio z artykułów Wikipedii z wykorzystaniem RAG.
-
+**WikiQuiz AI** to projekt zaliczeniowy z przedmiotu PJF - generator quizów i fiszek edukacyjnych, który wykorzystuje artykuły Wikipedii jako źródło wiedzy. Aplikacja automatycznie przetwarza dowolny artykuł, wyodrębnia kluczowe informacje i generuje fiszki/quizy do nauki z wykorzystaniem RAG (Retrieval-Augmented Generation).
 ## Planowane, kluczowe funkcjonalności (w zależności od czasu...)
 
 | Kategoria | Funkcjonalność | Opis                                                                                                                |
@@ -26,9 +25,10 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 4.  **Generation:** Zapytanie użytkownika trafia do LLM, któremu podany jest *kontekst* (oraz najbardziej relewantne *chunks* pobrane z ChromaDB).
 
 ## Tech Stack
-* **Język:** Python 3.14
-* **Orkiestracja AI:** LangChain
-* **Wektorowa Baza Danych:** ChromaDB
-* **API LLM:** OpenAI (GPT-4o) / Llama3
-* **Parsowanie:** BeautifulSoup4, Requests
-* **Backend/Frontend:** FastAPI / Streamlit
+- **Język programowania:** Python 3.14
+- **Orkiestracja AI:** LangChain
+- **Wektorowa baza danych:** ChromaDB
+- **Modele LLM (API):** OpenAI GPT-4o / Meta Llama 3
+- **Web scraping / parsowanie:** Requests, BeautifulSoup4
+- **Backend:** FastAPI
+- **Frontend:** Streamlit
