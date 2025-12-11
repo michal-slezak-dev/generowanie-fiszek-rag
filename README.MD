@@ -25,8 +25,7 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 3.  **Storage:** Wektory są zapisywane w bazie wektorowej **ChromaDB**.
 4.  **Generation:** Zapytanie użytkownika trafia do LLM, któremu podany jest *kontekst* (oraz najbardziej relewantne *chunks* pobrane z ChromaDB).
 
-## 🛠 Tech Stack
-
+## Tech Stack
 * **Język:** Python 3.14
 * **Orkiestracja AI:** LangChain
 * **Wektorowa Baza Danych:** ChromaDB
