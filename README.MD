@@ -15,14 +15,13 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 | **Baza Wiedzy** | Wektorowa Baza Danych | Indeksowanie tekstu z URL Wikipedii w **ChromaDB** w celu szybkiego wyszukiwania.                                                                         |
 | **Trwałość Danych** | **Zapis Stanu (SQL)** | Użycie tradycyjnej relacyjnej bazy danych (np. SQLite/PostgreSQL) do **trwałego przechowywania wygenerowanych fiszek** oraz ich stanów nauki (dane SM-2). |
 | **Uczenie** | Algorytm SM-2 (SRS) | Implementacja algorytmu SuperMemo-2 w Pythonie do wyznaczania optymalnych interwałów powtórek.                                              |
-| **Modularność** | Architektura OOP | Organizacja kodu w warstwy i klasy , z myślą o późniejszej rozbudowie projektu, np. w oparciu o FastAPI.                                                  |
 
 ### Pipeline RAG (Retrieval-Augmented Generation)
 
 1. **Ingestion:** Użytkownik podaje URL, który następnie zostaje pobrany i przetworzony.
 2. **Indexing:** Pozyskany tekst jest czyszczony, dzielony na kontekstowe *chunks* i wektoryzowany.
 3. **Storage:** Wygenerowane wektory są zapisywane w wektorowej bazie danych **ChromaDB**.
-4. **Retrieval & Generation:** Podczas zapytania użytkownika system pobiera z ChromaDB najbardziej relewantne *chunks* i przekazuje je jako kontekst do modelu LLM, który generuje finalną odpowiedź.
+4. **Retrieval & Generation:** Podczas zapytania użytkownika system pobiera z ChromaDB najbardziej odpowiednie *chunks* i przekazuje je jako kontekst do modelu LLM, który generuje finalną odpowiedź.
 
 ## Tech Stack
 - **Język programowania:** Python 3.14
