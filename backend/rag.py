@@ -6,9 +6,10 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+from bs4 import BeautifulSoup
 
 class RAGService:
-    def __init__(self, llm_model : str = 'llama3', embedding_model : str = 'llama3'):
+    def __init__(self, llm_model : str = 'llama3.1', embedding_model : str = 'llama3.1'):
         self.llm_model = llm_model
         self.embedding_model = embedding_model
 
@@ -42,7 +43,8 @@ class RAGService:
         self.vector_store = Chroma.from_documents(
             documents=splits,
             embedding=self.embeddings,
-            collection_name='current_doc'
+            collection_name='current_doc',
+            persist_directory="./vector_db."
         )
     
         self.retriever = self.vector_store.as_retriever()
@@ -57,13 +59,13 @@ class RAGService:
                 You are an academic knowledge assistant. Your mission is to transform raw text (Wikipedia data) into high-quality pedagogical materials (flashcards).
 
                 TASK:
-                Analyze the provided context and generate flashcards optimized for spaced repetition based on the user's request.
+                Analyze the provided context and generate flashcards optimized for spaced repetition based on the user's request. Everytime, try to generate different flashcards.
 
                 GOALS:
                 1. Extract core definitions, core information, and scientific concepts.
                 2. Focus on single, atomic facts for better memory retention.
                 3. Use precise, objective academic language.
-                4. Output strictly as a JSON object (list of dictionaries with "question" and "answer").
+                4. Output strictly as a JSON object (list of dictionaries with {{"question": "answer"}}).
 
                 CONTEXT (SOURCE MATERIAL):
                 {context}
@@ -72,19 +74,19 @@ class RAGService:
                 - Do NOT add information that is not present in the CONTEXT documents.
                 - IGNORE metadata like edit dates, licensing info, or source citations, etc.
                 - If facts are missing, do not invent information.
-                - NO conversational fillers (e.g., "Here are your flashcards" etc.). Output ONLY the JSON.
+                - NO conversational fillers (e.g., {{"Here are your flashcards"}} etc.). Output ONLY the JSON.
 
                 USER REQUEST:
                 {question}
                 """
         
-        prompt = ChatPromptTemplate(template)
+        prompt = ChatPromptTemplate.from_template(template)
 
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
 
         self.chain = (
-            {'context': self.retriever | format_docs, "question" : RunnablePassthorugh()}
+            {'context': self.retriever | format_docs, 'question' : RunnablePassthrough()}
             | prompt
             | self.llm
             | StrOutputParser()
@@ -95,6 +97,10 @@ class RAGService:
             return "Please process a ..."
         return self.chain.invoke(question)
     
+# test
+rag_server = RAGService()                   # Stwórz
+rag_server.process_url("https://en.wikipedia.org/wiki/Python_(programming_language)")
+answer = rag_server.ask_question("Create 5 flashcards about this wikipedia page")
+print(answer)
 
-rag_server = RAGService()
 
