@@ -1,4 +1,4 @@
-# WikiQuiz AI: RAG Flashcard Generator
+# WikiCard AI - RAG-Powered Flashcard Generatio
 Przedmiot: Programowanie w Językach Funkcyjnych\
 Autor: Michał Ślęzak WCY23IJ2S1 860 65\
 Prowadzący laboratorium: mgr inż. Piotr Bączyk
@@ -6,7 +6,7 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 
 ## Opis Projektu
 
-**WikiQuiz AI** to projekt zaliczeniowy z przedmiotu PJF - generator fiszek edukacyjnych, który wykorzystuje artykuły Wikipedii jako źródło wiedzy. Aplikacja automatycznie przetwarza dowolny artykuł, wyodrębnia kluczowe informacje i generuje fiszki do nauki za pomocą RAG (Retrieval-Augmented Generation).
+**WikiCard AI** to projekt zaliczeniowy z przedmiotu PJF - generator fiszek edukacyjnych, który wykorzystuje artykuły Wikipedii jako źródło wiedzy. Aplikacja automatycznie przetwarza dowolny artykuł, wyodrębnia kluczowe informacje i generuje fiszki do nauki za pomocą RAG (Retrieval-Augmented Generation).
 ## Planowane, kluczowe funkcjonalności (w zależności od czasu...)
 
 | Kategoria | Funkcjonalność | Opis                                                                                                                                                      |
