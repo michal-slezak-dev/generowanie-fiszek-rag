@@ -44,7 +44,7 @@ class RAGService:
             documents=splits,
             embedding=self.embeddings,
             collection_name='current_doc',
-            persist_directory="./vector_db."
+            #persist_directory="./vector_db"
         )
     
         self.retriever = self.vector_store.as_retriever()
@@ -52,7 +52,7 @@ class RAGService:
 
         return len(splits)
     
-    # 
+    
     def _create_chain(self):
         template = """
                 ROLE:
