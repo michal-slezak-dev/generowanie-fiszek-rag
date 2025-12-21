@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, create_engine, Session
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
-connect_args = {"check_same_thread": False} # allows multiple threads to access the db
+connect_args = {"check_same_thread": False} # allows multiple threads to access the db at the time
 
 engine = create_engine(sqlite_url, connect_args=connect_args)
 

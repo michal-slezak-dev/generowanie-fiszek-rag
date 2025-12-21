@@ -98,7 +98,7 @@ class RAGService:
         return self.chain.invoke(question)
     
 # test
-rag_server = RAGService()                   # Stwórz
+rag_server = RAGService()                   
 rag_server.process_url("https://en.wikipedia.org/wiki/Python_(programming_language)")
 answer = rag_server.ask_question("Create 5 flashcards about this wikipedia page")
 print(answer)
