@@ -215,3 +215,4 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 backend/database.db
+chroma_db/chroma.sqlite3
