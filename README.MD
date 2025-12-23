@@ -1,4 +1,4 @@
-# WikiCard AI - RAG-Powered Flashcard Generatio
+# WikiCard AI - RAG-Powered Flashcard Generation
 Przedmiot: Programowanie w Językach Funkcyjnych\
 Autor: Michał Ślęzak WCY23IJ2S1 860 65\
 Prowadzący laboratorium: mgr inż. Piotr Bączyk
@@ -13,8 +13,7 @@ Prowadzący laboratorium: mgr inż. Piotr Bączyk
 | :--- | :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Generowanie** | RAG Pipeline | Wykorzystanie LangChain i ChromaDB do kontekstowego generowania pytań na podstawie wyszukanych fragmentów tekstu.                                         |
 | **Baza Wiedzy** | Wektorowa Baza Danych | Indeksowanie tekstu z URL Wikipedii w **ChromaDB** w celu szybkiego wyszukiwania.                                                                         |
-| **Trwałość Danych** | **Zapis Stanu (SQL)** | Użycie tradycyjnej relacyjnej bazy danych (np. SQLite/PostgreSQL) do **trwałego przechowywania wygenerowanych fiszek** oraz ich stanów nauki (dane SM-2, jeśli czasu starczy). |
-| **Uczenie** | Algorytm SM-2 (SRS) | Implementacja algorytmu SuperMemo-2 w Pythonie do wyznaczania optymalnych interwałów powtórek.   (jeśli starczy czasu)                                           |
+| **Trwałość Danych** | **Zapis Stanu (SQL)** | Użycie tradycyjnej relacyjnej bazy danych (np. SQLite) do **trwałego przechowywania wygenerowanych fiszek** |                                   |
 
 ### Pipeline RAG (Retrieval-Augmented Generation)
 
