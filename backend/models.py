@@ -7,7 +7,7 @@ from sqlmodel import Field, Relationship, SQLModel
 class DeckStatus(str, Enum):
     ACTIVE = "active"
     ARCHIVED = "archived"
-    DRAFT = "draft"  # For decks that are generated but not saved yet
+    DRAFT = "draft"  # for decks that are generated but not saved yet
 
 class User(SQLModel, table=True):
     id : Optional[int] = Field(default=None, primary_key=True)
