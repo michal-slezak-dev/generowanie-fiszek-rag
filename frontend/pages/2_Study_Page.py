@@ -58,7 +58,7 @@ if idx < len(queue):
                 # init next state
                 st.session_state.show_back = False
                 st.session_state.current_card_index += 1
-                st.rerun()
+                #st.rerun()
             except Exception as e:
                 st.error(f"Error submitting review: {e}")
 

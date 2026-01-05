@@ -35,7 +35,6 @@ class SM2Algorithm(SpacedRepetitionAlgo):
             new_interval = 1
             new_easiness_factor = easiness_factor # EF doesn't change on failure in standard SM-2, or can decrease
             # We will follow the standard: EF changes happen, but repetitions reset.
-            pass
         else:
             new_repetitions = repetitions + 1
             
