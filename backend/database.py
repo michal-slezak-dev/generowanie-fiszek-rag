@@ -1,10 +1,18 @@
 from sqlmodel import SQLModel, create_engine, Session
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False} # allows multiple threads to access the db at the time
 engine = create_engine(sqlite_url, connect_args=connect_args)
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
