@@ -1,32 +1,65 @@
-# WikiCard AI - RAG-Powered Flashcard Generation
-Przedmiot: Programowanie w Językach Funkcyjnych\
-Autor: Michał Ślęzak WCY23IJ2S1 860 65\
-Prowadzący laboratorium: mgr inż. Piotr Bączyk
+# WikiCard AI – Generator Fiszek z Wikipedii
+**Projekt zaliczeniowy z przedmiotu Programowanie w Językach Funkcyjnych (PJF)**  
+**Autor:** Michał Ślęzak, WCY23IJ2S1, nr albumu 860 65  
+**Prowadzący laboratorium:** mgr inż. Piotr Bączyk  
 
+WikiCard AI to aplikacja generująca fiszki edukacyjne na podstawie stron z Wikipedii. Wykorzystuje **RAG (Retrieval-Augmented Generation)** do wyszukiwania kluczowych fragmentów tekstu i tworzenia merytorycznych fiszek. Dodatkowy algorytm **SM-2** optymalizuje proces nauki poprzez rozłożone powtórki - oblicza optymalny interwał między sesjami.
 
-## Opis Projektu
+---
+## Funkcjonalności
+- **Pipeline RAG:** Automatyczne pobieranie treści ze strony Wikipedii po wklejeniu URL, chunking, indeksowanie do ChromaDB i generowanie fiszek przez model LLM.
+- **Baza wektorowa:** ChromaDB do semantycznego wyszukiwania kontekstu.
+- **Trwałe przechowywanie:** SQLite do zapisywania decku fiszek, stanu nauki oraz możliwość usunięcia danego decku fiszek.
+- **System powtórek SM-2:** Oblicza interwały i ease factor na podstawie oceny danej fiszki przez użytkownika.
+---
 
-**WikiCard AI** to projekt zaliczeniowy z przedmiotu PJF - generator fiszek edukacyjnych, który wykorzystuje artykuły Wikipedii jako źródło wiedzy. Aplikacja automatycznie przetwarza dowolny artykuł, wyodrębnia kluczowe informacje i generuje fiszki do nauki za pomocą RAG (Retrieval-Augmented Generation).
-## Planowane, kluczowe funkcjonalności (w zależności od czasu...)
+## Stos technologiczny
+| Kategoria | Technologie |
+|-----------|-------------|
+| **Język** | Python 3.13.9 |
+| **Backend** | FastAPI |
+| **Frontend** | Streamlit |
+| **AI** | LangChain, Meta Llama 3.1 (Ollama) |
+| **Wektorowa baza danych** | ChromaDB |
+| **Baza danych** | SQLite |
+---
 
-| Kategoria | Funkcjonalność | Opis                                                                                                                                                      |
-| :--- | :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Generowanie** | RAG Pipeline | Wykorzystanie LangChain i ChromaDB do kontekstowego generowania pytań na podstawie wyszukanych fragmentów tekstu.                                         |
-| **Baza Wiedzy** | Wektorowa Baza Danych | Indeksowanie tekstu z URL Wikipedii w **ChromaDB** w celu szybkiego wyszukiwania.                                                                         |
-| **Trwałość Danych** | **Zapis Stanu (SQL)** | Użycie tradycyjnej relacyjnej bazy danych (np. SQLite) do **trwałego przechowywania wygenerowanych fiszek** |                                   |
+## Działanie
+### Pipeline RAG
+1. **Ingestion:** Pobieranie HTML z Wikipedii.
+2. **Indexing:** Podział na chunki, wektoryzacja.
+3. **Storage:** Zapis do ChromaDB.
+4. **Retrieval + Generation:** Wyszukiwanie podobnych chunków i generowanie fiszek do formatu JSON przez model Llama 3.1.
 
-### Pipeline RAG (Retrieval-Augmented Generation)
+### Algorytm SM-2
+Na podstawie oceny fiszki aktualizuje:
+- **Easiness Factor (EF)**
+- **Interval** (dni do powtórki)
+- **Repetitions** (licznik sukcesów)
+---
 
-1. **Ingestion:** Użytkownik podaje URL, który następnie zostaje pobrany i przetworzony.
-2. **Indexing:** Pozyskany tekst jest czyszczony, dzielony na kontekstowe *chunks* i wektoryzowany.
-3. **Storage:** Wygenerowane wektory są zapisywane w wektorowej bazie danych **ChromaDB**.
-4. **Retrieval & Generation:** Podczas zapytania użytkownika system pobiera z ChromaDB najbardziej odpowiednie *chunks* i przekazuje je jako kontekst do modelu LLM, który generuje finalną odpowiedź.
+## Uruchomienie
+### Wymagania
+- Ollama z modelem: `ollama pull llama3.1`
+- Python 3.13.9+
 
-## Tech Stack
-- **Język programowania:** Python 3.13.9 (Conda)
-- **Orkiestracja AI:** LangChain
-- **Wektorowa baza danych:** ChromaDB
-- **Modele LLM:** Meta Llama 3.1
-- **Web scraping / parsowanie:** Requests, BeautifulSoup4
-- **Backend:** FastAPI
-- **Frontend:** Streamlit
+### Instalacja 
+```bash
+git clone https://github.com/michal-slezak-dev/generowanie-fiszek-rag.git
+cd generowanie-fiszek-rag
+pip install -r requirements.txt
+```
+
+### Start
+Wykonujemy te komendy z folderu głównego generowanie-fiszek-rag poprzez dwa terminale.
+
+Terminal 1 - backend:
+```bash
+cd backend
+uvicorn main:app --reload
+```
+
+Terminal 2 - frontend:
+```bash
+streamlit run frontend/Home.py
+```
