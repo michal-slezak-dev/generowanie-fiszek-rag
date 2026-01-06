@@ -20,19 +20,12 @@ class FlashcardDeckSchema(BaseModel):
 
 class RAGService:
     def __init__(self, persist_directory : str = "./chroma_db", model_name : str = 'llama3.1'):
-        # self.llm_model = llm_model
-        # self.embedding_model = embedding_model
         self.model_name = model_name
         self.persist_directory = persist_directory
 
         # Initialize embedding and LLM
         self.embedding_function = OllamaEmbeddings(model=self.model_name)
         self.llm = ChatOllama(model=self.model_name, temperature=0.1)
-
-        # Vector store 
-        # self.vector_store = None
-        # self.retriever = None
-        # self.chain = None 
 
     def scrape_and_load(self, url : str) -> List[Any]:
         """Scrapes and loads the content of our Wikipedia page"""
@@ -61,8 +54,6 @@ class RAGService:
     
     def index_documents(self, chunks : List[Any], collection_name : str) -> Chroma: # vectorization
         """Vectorizes our chunks"""
-
-        # self.delete_collection(collection_name) 
 
         vector_store = Chroma.from_documents(
             documents=chunks,
@@ -200,64 +191,3 @@ class RAGService:
         flashcards = self.generate_flashcards(collection_name)
         
         return flashcards
-
-
-
-    
-    # def _create_chain(self):
-    #     template = """
-    #             ROLE:
-    #             You are an academic knowledge assistant. Your mission is to transform raw text (Wikipedia data) into high-quality pedagogical materials (flashcards).
-
-    #             TASK:
-    #             Analyze the provided context and generate flashcards optimized for spaced repetition based on the user's request. Everytime, try to generate different flashcards.
-
-    #             GOALS:
-    #             1. Extract core definitions, core information, and scientific concepts.
-    #             2. Focus on single, atomic facts for better memory retention.
-    #             3. Use precise, objective academic language.
-    #             4. Output strictly as a JSON object (list of dictionaries with {{"question": "answer"}}).
-
-    #             CONTEXT (SOURCE MATERIAL):
-    #             {context}
-
-    #             RULES:
-    #             - Do NOT add information that is not present in the CONTEXT documents.
-    #             - IGNORE metadata like edit dates, licensing info, or source citations, etc.
-    #             - If facts are missing, do not invent information.
-    #             - NO conversational fillers (e.g., {{"Here are your flashcards"}} etc.). Output ONLY the JSON.
-
-    #             USER REQUEST:
-    #             {question}
-    #             """
-        
-    #     prompt = ChatPromptTemplate.from_template(template)
-
-    #     def format_docs(docs):
-    #         return "\n\n".join(doc.page_content for doc in docs)
-
-    #     self.chain = (
-    #         {'context': self.retriever | format_docs, 'question' : RunnablePassthrough()}
-    #         | prompt
-    #         | self.llm
-    #         | StrOutputParser()
-    #     )
-    
-    # def ask_question(self, question : str) -> str:
-    #     if not self.chain:
-    #         return "Please process a ..."
-    #     return self.chain.invoke(question)
-    
-# test
-# rag_server = RAGService()                   
-# rag_server.process_url("https://en.wikipedia.org/wiki/Python_(programming_language)")
-# answer = rag_server.ask_question("Create 5 flashcards about this wikipedia page")
-# print(answer)
-
-
-# rag = RAGService()
-# cards = rag.process_and_ask("https://en.wikipedia.org/wiki/Python_(programming_language)")
-
-# import json
-# print(json.dumps(cards, indent=2))
-
