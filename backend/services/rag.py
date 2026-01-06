@@ -77,8 +77,8 @@ class RAGService:
                 persist_directory=self.persist_directory
             )
 
-            retriever = vector_store.as_retriever(search_kwargs = {'k': 5}) # top 5 answers, the closest
-            context_docs = retriever.invoke("important facts definitions concepts summary")
+            retriever = vector_store.as_retriever(search_kwargs = {'k': 12}) # top 12 answers, the closest
+            context_docs = retriever.invoke(f"important facts, key definitions, concepts, summary about {topic}")
             context_text = format_docs(context_docs)
 
             parser = JsonOutputParser(pydantic_object=FlashcardDeckSchema)
@@ -120,10 +120,12 @@ class RAGService:
                     You are an academic knowledge assistant. Your mission is to transform raw text (Wikipedia data) into high-quality pedagogical materials (flashcards).
 
                     GOALS:
-                    1. Extract core definitions, core information, and scientific concepts.
+                    1. Extract 5 most fundamental facts: core definitions, core information, and scientific concepts.
                     2. Focus on single, atomic facts for better memory retention.
-                    3. Use precise, objective academic language.
-                    4. Output strictly as a JSON object following the format instructions below.
+                    3. Use the "Minimum Information Principle": each card must be brief and focus on ONE specific piece of information.
+                    4. Front should be a clear question; Back should be a concise answer.
+                    5. Use precise, objective academic language.
+                    6. Output strictly as a JSON object following the format instructions below.
 
                     RULES:
                     - Do NOT add information that is not present in the CONTEXT documents.

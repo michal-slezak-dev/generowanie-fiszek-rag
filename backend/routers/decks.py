@@ -21,7 +21,7 @@ class DeckResponse(BaseModel):
     flashcards: List[dict]
 
 @router.post("/generate", response_model=DeckResponse)
-async def generate_deck(request: GenerateRequest, session: Session = Depends(get_Session)):
+def generate_deck(request: GenerateRequest, session: Session = Depends(get_Session)):
     # create a draft deck
     # TODO: later - fetch real title from URL or scrape it
     deck = Deck(
@@ -37,6 +37,8 @@ async def generate_deck(request: GenerateRequest, session: Session = Depends(get
 
     try:
         docs = rag_service.scrape_and_load(request.url)
+        wiki_title = docs[0].metadata.get('title', 'Wikipedia Page').strip()
+
         chunks = rag_service.chunk_documents(docs)
         collection_name = f"deck_{deck.id}"
         
@@ -46,7 +48,7 @@ async def generate_deck(request: GenerateRequest, session: Session = Depends(get
         rag_service.index_documents(chunks, collection_name)
         
         # generate
-        generated_cards = rag_service.generate_flashcards(collection_name)
+        generated_cards = rag_service.generate_flashcards(collection_name, topic=f"Create 5 flashcards about {wiki_title}")
         
         # save our flashcard to db
         created_cards = []
