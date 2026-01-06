@@ -118,3 +118,14 @@ def get_deck_cards(deck_id : int, session : Session = Depends(get_Session)):
         raise HTTPException(status_code=404, detail="Deck not found")
     
     return deck.flashcards
+
+@router.delete("/{deck_id}")
+def delete_deck(deck_id: int, session: Session = Depends(get_Session)):
+    deck = session.get(Deck, deck_id)
+    if not deck:
+        raise HTTPException(status_code=404, detail="Deck not found")
+    
+    session.delete(deck)
+    session.commit()
+
+    return {"message": f"Deck: {deck_id} and all related data deleted successfully"}
