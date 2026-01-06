@@ -76,3 +76,22 @@ else:
         with st.expander(f"📖 {deck['title']}"):
             st.markdown(f"**Desc:** {deck.get('description', 'No description')}")
             st.markdown(f"**Status:** {deck['status']}")
+
+            col_action, col_delete = st.columns([0.85, 0.15])
+            with col_action:
+                if st.button("Go to your decks", key=f"deck_page_btn_{deck['id']}", help="Go to Study Deck page"):
+                    st.switch_page("pages/3_Study_Deck.py")
+
+            with col_delete:
+                if st.button("🗑️", key=f"del_{deck['id']}", help="Delete this deck"):
+                    try:
+                        with httpx.Client() as client:
+                            res = client.delete(f"{API_URL}/decks/{deck['id']}")
+                            
+                            if res.status_code == 200:
+                                st.success("Deleted!")
+                                st.rerun()
+                            else:
+                                st.error(f"Error: {res.status_code}")
+                    except Exception as e:
+                        st.error(f"Connection error: {e}")
