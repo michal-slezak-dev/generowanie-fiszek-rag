@@ -102,6 +102,9 @@ def discard_deck(deck_id: int, session: Session = Depends(get_Session)):
     deck.status = DeckStatus.ARCHIVED
     session.add(deck)
     session.commit()
+
+    # session.delete(deck)
+    # session.commit()
     return {"status": "success", "deck_status": deck.status}
 
 @router.get("/", response_model=List[Deck])
