@@ -4,9 +4,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
-from bs4 import BeautifulSoup
+from langchain_core.output_parsers import JsonOutputParser
 from typing import List, Dict, Any
 from pydantic import BaseModel, Field
 import os
@@ -123,7 +121,7 @@ class RAGService:
                     1. Extract 5 most fundamental facts: core definitions, core information, and scientific concepts.
                     2. Focus on single, atomic facts for better memory retention.
                     3. Use the "Minimum Information Principle": each card must be brief and focus on ONE specific piece of information.
-                    4. Front should be a clear question; Back should be a concise answer.
+                    4. Front should be a clear question, Back should be a concise answer.
                     5. Use precise, objective academic language.
                     6. Output strictly as a JSON object following the format instructions below.
 
