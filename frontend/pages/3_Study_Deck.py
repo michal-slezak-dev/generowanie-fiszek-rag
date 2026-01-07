@@ -1,4 +1,5 @@
 import streamlit as st
+from typing import List, Dict, Any
 import httpx
 
 API_URL = "http://127.0.0.1:8000"
@@ -16,7 +17,22 @@ def prev_card():
 def flip_card():
     st.session_state.is_flipped = not st.session_state.is_flipped
 
-def load_cards(deck_id, deck_title):
+def fetch_decks() -> List[Dict[str, Any]]:
+    try:
+        with httpx.Client() as client:
+            # hardcoded user id = 1, we don't have login/registration
+            response = client.get(f"{API_URL}/decks/?user_id=1")
+            if response.status_code == 200:
+                decks = response.json()
+            else:
+                decks = []
+                st.error("Failed to fetch decks.")
+            return decks
+    except Exception as e:
+        st.error(f"Could not connect to backend: {e}")
+        return []
+
+def load_cards(deck_id : int, deck_title : str):
     try:
         with httpx.Client() as client:
             res = client.get(f"{API_URL}/decks/{deck_id}/cards")
@@ -43,17 +59,19 @@ if "selected_deck_name" not in st.session_state:
     st.session_state.selected_deck_name = ""
 
 # fetch decks
-try:
-    with httpx.Client() as client:
-        # hardcoded user id = 1, we don't have login/registration
-        response = client.get(f"{API_URL}/decks/?user_id=1")
-        if response.status_code == 200:
-            decks = response.json()
-        else:
-            decks = []
-            st.error("Failed to fetch decks.")
-except Exception as e:
-    st.error(f"Could not connect to backend: {e}")
+# try:
+#     with httpx.Client() as client:
+#         # hardcoded user id = 1, we don't have login/registration
+#         response = client.get(f"{API_URL}/decks/?user_id=1")
+#         if response.status_code == 200:
+#             decks = response.json()
+#         else:
+#             decks = []
+#             st.error("Failed to fetch decks.")
+# except Exception as e:
+#     st.error(f"Could not connect to backend: {e}")
+
+decks = fetch_decks()
 
 st.title("Study Decks", text_alignment="center")
 if st.button("Generate Deck page"):

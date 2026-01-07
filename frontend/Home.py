@@ -1,8 +1,43 @@
 import streamlit as st
+from typing import Tuple, List, Dict, Any
 import httpx
 
 API_URL = "http://127.0.0.1:8000"
 st.set_page_config(page_title="RAG Flashcards", layout="wide")
+
+def fetch_decks_and_due_count() -> Tuple[List[Dict[str, Any]], int]:
+    try:
+        with httpx.Client() as client:
+            # hardcoded user id = 1, we don't have login/registration
+            response = client.get(f"{API_URL}/decks/?user_id=1")
+            if response.status_code == 200:
+                decks = response.json()
+            else:
+                decks = []
+                st.error("Failed to fetch decks.")
+                
+            # fetch Due Count
+            due_response = client.get(f"{API_URL}/study/due?user_id=1")
+            due_count = len(due_response.json()) if due_response.status_code == 200 else 0
+    except Exception as e:
+        st.error(f"Could not connect to backend: {e}")
+        decks = []
+        due_count = 0
+    
+    return decks, due_count
+
+def delete_deck():
+    try:
+        with httpx.Client() as client:
+            res = client.delete(f"{API_URL}/decks/{deck['id']}")
+                            
+            if res.status_code == 200:
+                st.success("Deleted!")
+                st.rerun()
+            else:
+                st.error(f"Error: {res.status_code}")
+    except Exception as e:
+        st.error(f"Connection error: {e}")
 
 # st.title(" WikiCard AI")
 # st.subheader("RAG-Powered Flashcard Generation")
@@ -43,23 +78,24 @@ with st.sidebar:
     st.write("Logged in as: User 1")
 
 # fetch decks
-try:
-    with httpx.Client() as client:
-        # hardcoded user id = 1, we don't have login/registration
-        response = client.get(f"{API_URL}/decks/?user_id=1")
-        if response.status_code == 200:
-            decks = response.json()
-        else:
-            decks = []
-            st.error("Failed to fetch decks.")
+# try:
+#     with httpx.Client() as client:
+#         # hardcoded user id = 1, we don't have login/registration
+#         response = client.get(f"{API_URL}/decks/?user_id=1")
+#         if response.status_code == 200:
+#             decks = response.json()
+#         else:
+#             decks = []
+#             st.error("Failed to fetch decks.")
             
-        # fetch Due Count
-        due_response = client.get(f"{API_URL}/study/due?user_id=1")
-        due_count = len(due_response.json()) if due_response.status_code == 200 else 0
-except Exception as e:
-    st.error(f"Could not connect to backend: {e}")
-    decks = []
-    due_count = 0
+#         # fetch Due Count
+#         due_response = client.get(f"{API_URL}/study/due?user_id=1")
+#         due_count = len(due_response.json()) if due_response.status_code == 200 else 0
+# except Exception as e:
+#     st.error(f"Could not connect to backend: {e}")
+#     decks = []
+#     due_count = 0
+decks, due_count = fetch_decks_and_due_count()
 
 # MSM-2 metrics
 col1, col2 = st.columns(2)
@@ -84,14 +120,15 @@ else:
 
             with col_delete:
                 if st.button("🗑️", key=f"del_{deck['id']}", help="Delete this deck"):
-                    try:
-                        with httpx.Client() as client:
-                            res = client.delete(f"{API_URL}/decks/{deck['id']}")
+                    # try:
+                    #     with httpx.Client() as client:
+                    #         res = client.delete(f"{API_URL}/decks/{deck['id']}")
                             
-                            if res.status_code == 200:
-                                st.success("Deleted!")
-                                st.rerun()
-                            else:
-                                st.error(f"Error: {res.status_code}")
-                    except Exception as e:
-                        st.error(f"Connection error: {e}")
+                    #         if res.status_code == 200:
+                    #             st.success("Deleted!")
+                    #             st.rerun()
+                    #         else:
+                    #             st.error(f"Error: {res.status_code}")
+                    # except Exception as e:
+                    #     st.error(f"Connection error: {e}")
+                    delete_deck()

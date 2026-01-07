@@ -4,6 +4,17 @@ import httpx
 API_URL = "http://127.0.0.1:8000"
 st.set_page_config(page_title="Study Session", layout="centered")
 
+def fetch_study_queue():
+    try:
+        with httpx.Client() as client:
+            res = client.get(f"{API_URL}/study/due?user_id=1")
+            if res.status_code == 200:
+                st.session_state.study_queue = res.json()
+            else:
+                st.error("Failed to load your flashcards.")
+    except Exception as e:
+        st.error(f"Connection error: {e}")
+
 if "study_queue" not in st.session_state:
     st.session_state.study_queue = []
 if "current_card_index" not in st.session_state:
@@ -16,15 +27,16 @@ st.title("Study Session", text_alignment="center")
 # load study queue if empty
 if not st.session_state.study_queue:
     with st.spinner("Fetching due cards..."):
-        try:
-            with httpx.Client() as client:
-                res = client.get(f"{API_URL}/study/due?user_id=1")
-                if res.status_code == 200:
-                    st.session_state.study_queue = res.json()
-                else:
-                    st.error("Failed to load your flashcards.")
-        except Exception as e:
-            st.error(f"Connection error: {e}")
+        # try:
+        #     with httpx.Client() as client:
+        #         res = client.get(f"{API_URL}/study/due?user_id=1")
+        #         if res.status_code == 200:
+        #             st.session_state.study_queue = res.json()
+        #         else:
+        #             st.error("Failed to load your flashcards.")
+        # except Exception as e:
+        #     st.error(f"Connection error: {e}")
+        fetch_study_queue()
 
 queue = st.session_state.study_queue
 idx = st.session_state.current_card_index
