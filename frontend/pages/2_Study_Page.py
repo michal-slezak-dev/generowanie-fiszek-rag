@@ -9,7 +9,11 @@ def fetch_study_queue():
         with httpx.Client() as client:
             res = client.get(f"{API_URL}/study/due?user_id=1")
             if res.status_code == 200:
-                st.session_state.study_queue = res.json()
+                current_api_queue = res.json()
+
+                if len(current_api_queue) != len(st.session_state.study_queue): # if new cards were added
+                    st.session_state.study_queue = current_api_queue
+                    st.session_state.current_card_index = 0
             else:
                 st.error("Failed to load your flashcards.")
     except Exception as e:
@@ -25,18 +29,18 @@ if "show_back" not in st.session_state:
 st.title("Study Session", text_alignment="center")
 
 # load study queue if empty
-# if not st.session_state.study_queue:
-with st.spinner("Fetching due cards..."):
-    # try:
-    #     with httpx.Client() as client:
-    #         res = client.get(f"{API_URL}/study/due?user_id=1")
-    #         if res.status_code == 200:
-    #             st.session_state.study_queue = res.json()
-    #         else:
-    #             st.error("Failed to load your flashcards.")
-    # except Exception as e:
-    #     st.error(f"Connection error: {e}")
-    fetch_study_queue()
+if not st.session_state.study_queue:
+    with st.spinner("Fetching due cards..."):
+        # try:
+        #     with httpx.Client() as client:
+        #         res = client.get(f"{API_URL}/study/due?user_id=1")
+        #         if res.status_code == 200:
+        #             st.session_state.study_queue = res.json()
+        #         else:
+        #             st.error("Failed to load your flashcards.")
+        # except Exception as e:
+        #     st.error(f"Connection error: {e}")
+        fetch_study_queue()
 
 queue = st.session_state.study_queue
 idx = st.session_state.current_card_index
@@ -70,6 +74,10 @@ if idx < len(queue):
                 # init next state
                 st.session_state.show_back = False
                 st.session_state.current_card_index += 1
+
+                if st.session_state.current_card_index >= len(st.session_state.study_queue):
+                    st.session_state.study_queue = []
+                    st.session_state.current_card_index = 0
                 #st.rerun()
             except Exception as e:
                 st.error(f"Error submitting review: {e}")
